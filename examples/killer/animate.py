@@ -10,12 +10,12 @@ from postladim.particlefile import ParticleFile
 # ---------------
 
 # Files
-particle_file = 'streak.nc'
+particle_file = 'killer.nc'
 grid_file = '../data/ocean_avg_0014.nc'
 
 # Subgrid definition
-i0, i1 = 100, 130
-j0, j1 = 90, 115
+i0, i1 = 112, 118
+j0, j1 = 97, 103
 
 # ----------------
 
@@ -57,9 +57,9 @@ plt.pcolormesh(Xb, Yb, M, cmap=constmap)
 
 # Plot initial particle distribution
 X, Y = pf.position(0)
-particle_dist, = ax.plot(X, Y, '.', color='red', markeredgewidth=0, lw=0.5)
-# title = ax.set_title(pf.time(0))
-timestamp = ax.text(0.01, 0.97, pf.time(0), fontsize=15,
+particle_dist, = ax.plot(X, Y, '.', color='red',
+                         markeredgewidth=0, markersize=20)
+timestamp = ax.text(0.005, 0.97, pf.time(0), fontsize=15,
                     transform=ax.transAxes)
 
 
@@ -71,7 +71,7 @@ def animate(t):
     return particle_dist, timestamp
 
 # Do the animation
-anim = FuncAnimation(fig, animate, frames=num_times, interval=20,
+anim = FuncAnimation(fig, animate, frames=num_times, interval=30,
                      repeat=True, repeat_delay=500, blit=True)
 
 plt.show()

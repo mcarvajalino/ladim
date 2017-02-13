@@ -48,21 +48,11 @@ import numpy as np
 
 # ------------------------
 
-logger = logging.getLogger('auda')
-# logger = logging.getLogger(__name__)
-# ch = logging.StreamHandler()
-# formatter = logging.Formatter('%(levelname)s - %(message)s')
-# ch.setFormatter(formatter)
-# logger.addHandler(ch)
-
 
 class ParticleReleaser:
     """Particle Release Class"""
 
-    def __init__(self, config, loglevel=logging.INFO):
-
-        # print("loglevel = ", loglevel)
-        logger.setLevel(loglevel)
+    def __init__(self, config):
 
         # release_type = config.release_type
 
@@ -125,9 +115,9 @@ class ParticleReleaser:
         # Time control
         # print(self.times[0], self.times[-1])
         if self.times[0] < config.start_time:
-            logger.warning('Ignoring particle release before start')
+            logging.warning('Ignoring particle release before start')
         if self.times[-1] >= config.stop_time:
-            logger.warning('Ignoring particle release after stop')
+            logging.warning('Ignoring particle release after stop')
         valid = ((self.times >= config.start_time) &
                  (self.times < config.stop_time))
         self.times = self.times[valid]
@@ -136,14 +126,14 @@ class ParticleReleaser:
         self.unique_times = np.unique(self.times)
 
         if self.times[0] > config.start_time:
-            logger.warning('No particles at start time')
+            logging.warning('No particles at start time')
 
-        logger.info('First particle release at {}'.
-                    format(str(self.times[0])))
-        logger.info('Last particle release at  {}'.
-                    format(self.times[-1]))
-        logger.info('Number of particle releases = {}'.
-                    format(len(self.unique_times)))
+        logging.info('First particle release at {}'.
+                     format(str(self.times[0])))
+        logging.info('Last particle release at  {}'.
+                     format(self.times[-1]))
+        logging.info('Number of particle releases = {}'.
+                     format(len(self.unique_times)))
 
         # print(self.unique_times.dtype)
         # print(type(config.start_time))
@@ -155,8 +145,8 @@ class ParticleReleaser:
         self.unique_steps = rel_time // config.dt
 
         config.total_particle_count = self.release_data['mult'].sum()
-        logger.info('Total number of particles in simulation: {}'.
-                    format(config.total_particle_count))
+        logging.info('Total number of particles in simulation: {}'.
+                     format(config.total_particle_count))
 
         self._npids = 0    # Number of particles released
         self._release_index = 0
@@ -187,8 +177,8 @@ class ParticleReleaser:
             timestep = self.unique_steps[self._release_index]
         except IndexError:
             raise StopIteration
-        logger.info('release: timestep, time = {}, {}'.
-                    format(timestep, self.times[self._release_index]))
+        logging.info('release: timestep, time = {}, {}'.
+                     format(timestep, self.times[self._release_index]))
         # print(type(timestep))
         self._release_index += 1
 
@@ -229,35 +219,3 @@ def duplicate(A, M):
     return S
 
 # --------------------------------
-
-if __name__ == "__main__":
-
-    # Improvements, fjern fil - bruk inline string
-
-    # from datetime import datetime
-
-    # Make a minimal config object
-    class Container(object):
-        pass
-    config = Container()
-    config.start_time = np.datetime64('2015-03-31 12')
-    # config.reference_time = config.start_time
-    config.stop_time = np.datetime64('2015-04-04')
-    config.dt = 3600
-    config.particle_release_file = '../models/lakselus/release.in'
-    config.release_format = ['mult', 'release_time',
-                             'X', 'Y', 'Z',
-                             'farmid', 'super']
-    config.release_dtype = dict(mult=int, release_time=np.datetime64,
-                                X=float, Y=float, Z=float,
-                                farmid=int, super=float)
-    config.particle_variables = ['release_time', 'farmid']
-
-    release = ParticleReleaser(config)
-    # release = p.release()
-
-    for step in range(10):
-        print('step = ', step)
-        if step in release.steps:
-            V = next(release)
-            print(V)
