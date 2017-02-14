@@ -26,7 +26,8 @@ class State:
 
         self.pid = np.array([], dtype=int)
         for name in self.instance_variables:
-            setattr(self, name, np.array([], dtype=float))
+            setattr(self, name, np.array([], dtype='float32'))
+        print("---- X", self['X'].dtype)
 
         # Skal disse være her??, trenger ikke lagres,
         # oppdatere output etter hver release.
@@ -60,7 +61,9 @@ class State:
         self.pid = np.concatenate((self.pid, new['pid']))
         for name in self.instance_variables:
             if name in new:
-                self[name] = np.concatenate((self[name], new[name]))
+                print(name)
+                print(self[name].ndim, new[name].ndim)
+                self[name] = np.concatenate((self[name], np.atleast_1d(new[name])))
             else:   # Initialize to zero
                 self[name] = np.concatenate((self[name], np.zeros(nnew)))
         # Only store new particle variable values
@@ -69,10 +72,14 @@ class State:
         # for name in self.particle_variables:
         #    self[name] = new[name]
 
+        print("Append state: X", self['X'].dtype)
+
     def update(self, grid, forcing):
         self.timestep += 1
         self.timestamp += np.timedelta64(self.dt, 's')
         self.track.move_particles(grid, forcing, self)
+
+        print("State updated: X", self['X'].dtype)
 
         # From physics all particles are alive
         self.alive = np.ones(len(self), dtype='bool')

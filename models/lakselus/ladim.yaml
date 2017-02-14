@@ -15,7 +15,7 @@ time_control:
     # Start and stop of simulation
     # use an alias &t0 if used again
     start_time: &time0 2015-04-01 00:00:00
-    stop_time:  2015-04-02 00:00:00
+    stop_time:  2015-04-01 12:00:00
     # Reference time for netcdf output
     # by default set to start_time
     # can be overridden explicitly

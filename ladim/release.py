@@ -193,7 +193,13 @@ class ParticleReleaser:
         count = np.sum(mult)
         for key in release_keys:
             V[key] = duplicate(self.release_data[key][I], mult)
+            print(V[key])
+            print(len(self.release_data[key][I]))
+            if key != 'release_time':
+                V[key] = np.asarray(V[key], dtype=np.float32)
+                print("key", key, V[key].shape)
         V['pid'] = list(range(self._npids, self._npids+count))
+        print("release: X", V['X'].dtype)
 
         self._npids += count
 
@@ -216,6 +222,5 @@ def duplicate(A, M):
     S = []
     for a, m in zip(np.asarray(A), np.asarray(M)):
         S.extend(m*[a])
-    return S
 
 # --------------------------------

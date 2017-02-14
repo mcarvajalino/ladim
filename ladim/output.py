@@ -97,6 +97,9 @@ class OutPut:
         self.nc.variables['particle_count'][t] = pcount
 
         for name in self.instance_variables:
+            print("output", name)
+            print("len(state)", len(state), len(state['X']))
+            print(pstart, pcount, len(state[name]))
             self.nc.variables[name][pstart:pstart+pcount] = state[name]
 
         self.outcount += 1

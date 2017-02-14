@@ -117,12 +117,12 @@ class Grid:
                 self.Vtransform = 1   # Default = old way
 
         # Read some variables
-        self.H = ncid.variables['h'][self.J, self.I]
+        self.H = ncid.variables['h'][self.J, self.I].astype(np.float32)
         self.M = ncid.variables['mask_rho'][self.J, self.I].astype(int)
         # self.Mu = ncid.variables['mask_u'][self.Ju, self.Iu]
         # self.Mv = ncid.variables['mask_v'][self.Jv, self.Iv]
-        self.pm = ncid.variables['pm'][self.J, self.I]
-        self.pn = ncid.variables['pn'][self.J, self.I]
+        self.pm = ncid.variables['pm'][self.J, self.I].astype(np.float32)
+        self.pn = ncid.variables['pn'][self.J, self.I].astype(np.float32)
         self.lon = ncid.variables['lon_rho'][self.J, self.I]
         self.lat = ncid.variables['lat_rho'][self.J, self.I]
 

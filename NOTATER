@@ -18,13 +18,13 @@ ladim  175,52s user 41.6 system 99% cpu
 
 Skalerer opp # partikler
 mult = 30,  720 partikler totalt
-ladim  172.68s user 104.11s system 99% 
+ladim  172.68s user 104.11s system 99%
 
 mult = 300, 7200 totalt
-ladim  173.35s user 99.08s system 99% 
+ladim  173.35s user 99.08s system 99%
 
 mult = 3000, 72 000 totalt
-ladim  179.22s user 94.86s system 99% 
+ladim  179.22s user 94.86s system 99%
 
 mult = 30000, 720 000 totalt
 ladim  257.77s user 109.71s system 99%
@@ -140,3 +140,14 @@ Sample velocity tar samme tid.
 
 Prøver å sample hastighet i nærmeste celle.
 Dette har (overraskende) liten betydning for ytelsen.
+
+2017-02-13
+==========
+
+111.69s user 81.71s system 99 (mult=3000)
+
+Prøvde float32
+(ved scale_factor og add_offset + float32 som state-variable)
+97.04s user 24.70s system 99
+
+Funker ikke helt, må sjekke om konsekvent float32

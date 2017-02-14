@@ -30,23 +30,27 @@ class TrackPart:
 
         X, Y = state.X, state.Y
         self.pm, self.pn = grid.sample_metric(X, Y)
+        print("type pm: ", self.pm.dtype)
         dt = self.dt
+        print("type dt: ", type(dt))
         self.num_particles = len(X)
 
-        U = np.zeros(self.num_particles, dtype=float)
-        V = np.zeros(self.num_particles, dtype=float)
+        U = np.zeros(self.num_particles, dtype=np.float32)
+        V = np.zeros(self.num_particles, dtype=np.float32)
 
         # --- Advection ---
         if self.advect:
             Uadv, Vadv = self.advect(grid, forcing, state)
             U += Uadv
             V += Vadv
+        print("type U, Uadv:", U.dtype, Uadv.dtype)
 
         # --- Diffusion ---
         if self.diffusion:
             Udiff, Vdiff = self.diffuse()
             U += Udiff
             V += Vdiff
+        print("type U, Udiff:", U.dtype, Udiff.dtype)
 
         # --- Move the particles
 
@@ -64,6 +68,11 @@ class TrackPart:
 
         state.X = X
         state.Y = Y
+        print("**** X", state.X.dtype)
+        print("**** X", X.dtype)
+        print("**** X", state.X.dtype)
+        1/0
+
 
     def EF(self, grid, forcing, state):
         """Euler-Forward advection"""
@@ -83,11 +92,19 @@ class TrackPart:
         dt = self.dt
         pm, pn = grid.sample_metric(X, Y)
 
+        print("RK2: X", X.dtype)
+
         U, V = forcing.sample_velocity(X, Y, Z)
         X1 = X + 0.5 * U * pm * dt
         Y1 = Y + 0.5 * V * pn * dt
 
+        print("RK2: X1", X1.dtype)
+
+
         U, V = forcing.sample_velocity(X1, Y1, Z, tstep=0.5)
+
+        print("RK2: U", U.dtype)
+
         return U, V
 
     def RK4(self, grid, forcing, state):
@@ -121,7 +138,7 @@ class TrackPart:
 
         # Diffusive velocity
         stddev = (2*self.D/self.dt)**0.5
-        U = stddev * np.random.normal(size=self.num_particles)
-        V = stddev * np.random.normal(size=self.num_particles)
+        U = stddev * np.random.normal(size=self.num_particles).astype(np.float32)
+        V = stddev * np.random.normal(size=self.num_particles).astype(np.float32)
 
         return U, V
